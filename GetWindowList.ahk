@@ -78,7 +78,6 @@ ResetWindows() {
 	}
 }
 
-
 main() {
 	getActiveWindows()
 	setDDLItems()

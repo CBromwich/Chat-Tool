@@ -1,12 +1,13 @@
 #SingleInstance, Force
 #NoTrayIcon
-SetKeyDelay, 10 10
 
 ;Have to create tabs before importing otherwise the tabs that are referenced in the other files don't exist yet
-Gui, Add, Tab3, Section, Comments 1|Comments 2|Tools 
+Gui, Add, Tab3, Section, Comments 1|Comments 2|Tools
 
 #Include GetWindowList.ahk
 #Include OpenSettings.ahk
+#Include UsefulInfo.ahk
+#Include hide_nice.ahk
 
 ;=== Page 1, Column 1 ===
 Gui, Tab, Comments 1
@@ -39,6 +40,8 @@ Menu, HelpMenu, Add, About, AboutPage
 Menu, HelpMenu, Add, Help, HelpPage
 Menu, MenuBar, Add, Help, :HelpMenu
 Gui, Menu, MenuBar
+
+Gui, +AlwaysOnTop
 
 Gui, Show,, Command Center
 
@@ -79,18 +82,18 @@ HelpPage() {
 }
 
 /*
-Kana Magic courtesy if Christian Belland and Jeremy Lyon. I don't fully understand what this does, but it does work, so...
+Kana Magic courtesy of Christian Belland and Jeremy Lyon. I don't fully understand what this does, but it does work, so...
 */
 SendToKana(txt) {
 		IfWinExist, KANA - Agent
 		{
-		WinActivate, KANA - Agent
-		WinGetPos,,,x1,y1, KANA - Agent
-		x1 := 40
-		y1 := y1-280
-		ControlClick, x%x1% y%y1%, KANA - Agent, ,left, 2, , , ,
-		SendInput % txt
-	}
+			WinActivate, KANA - Agent
+			WinGetPos,,,x1,y1, KANA - Agent
+			x1 := 40
+			y1 := y1-280
+			ControlClick, x%x1% y%y1%, KANA - Agent, ,left, 2, , , ,
+			SendInput % txt
+		}
 }
 Return ; So GuiClose doesn't screw everything up
 
