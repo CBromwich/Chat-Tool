@@ -7,7 +7,6 @@ Gui, Add, Tab3, Section, Comments 1|Comments 2|Tools
 #Include GetWindowList.ahk
 #Include OpenSettings.ahk
 #Include UsefulInfo.ahk
-#Include hide_nice.ahk
 
 ;=== Page 1, Column 1 ===
 Gui, Tab, Comments 1
