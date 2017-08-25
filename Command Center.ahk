@@ -78,6 +78,7 @@ AboutPage() {
 	Gui, Help:Add, Text,, Developed by: Cody Bromwich
 	Gui, Help:Add, Text, Section, Source code available here:
 	Gui, Help:Add, Link,, <a href="https://github.com/CBromwich/Chat-Tool">https://github.com/CBromwich/Chat-Tool</a>
+	Gui, Help: +AlwaysOnTop
 	Gui, Help:Show,, About
 }
 
@@ -85,7 +86,7 @@ AboutPage() {
  * Opens the Readme in notepad
  */
 HelpPage() {
-	Run, notepad README.txt
+	Run, notepad S:\TB-West Central\Public\Macro Program\Chat Tool\README.txt
 }
 
 /*
@@ -129,7 +130,7 @@ check_for_files() {
 check_path() {
 	Global File_Path
 	IfExist, H:\
-		File_Path := "E:\MacroProgram\"
+		File_Path := "H:\MacroProgram\"
 	IfExist, C:\Users\%A_UserName%\Documents
 		File_Path := "C:\Users\" . A_UserName . "\Documents\MacroProgram\"
 	else
