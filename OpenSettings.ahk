@@ -8,5 +8,6 @@ Gui, Add, Button, vSettings gOpenSettings +xs+5 +ys+15, Set Responses
 Opens the text.ini file in Notepad for easy editing
 */
 OpenSettings() {
-	Run notepad text.ini
+	Global file_path
+	Run notepad %file_path%text.ini
 }

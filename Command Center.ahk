@@ -4,9 +4,15 @@
 ;Have to create tabs before importing otherwise the tabs that are referenced in the other files don't exist yet
 Gui, Add, Tab3, Section, Comments 1|Comments 2|Tools
 
+file_path := check_for_files()
+
+if !file_path
+	get_settings()
+
 #Include GetWindowList.ahk
 #Include OpenSettings.ahk
 #Include UsefulInfo.ahk
+
 
 ;=== Page 1, Column 1 ===
 Gui, Tab, Comments 1
@@ -45,26 +51,28 @@ Gui, +AlwaysOnTop
 Gui, Show,, Command Center
 
 /*
-Get text associated with pressed button from text.ini and send it
-If no text is found or there is any other error, it sends nothing
-*/
+ * Get text associated with pressed button from text.ini and send it
+ * If no text is found or there is any other error, it sends nothing
+ */
 PressButton() {
-	IniRead button_text, text.ini, Responses, %A_GuiControl%, %A_SPACE%
+	Global file_path
+	IniRead button_text, %file_path%text.ini, Responses, %A_GuiControl%, %A_SPACE%
 	SendToKana(button_text)
 }
 
 /*
-Function to dynamically label all buttons based on text.ini "Label" fields
-The label defaults to nothing if there is an error reading the label
-*/
+ * Function to dynamically label all buttons based on text.ini "Label" fields
+ * The label defaults to nothing if there is an error reading the label
+ */
 LabelButtons(ButtonLabel) {
-	IniRead _label, text.ini, Responses, %ButtonLabel%, %A_SPACE%
+	Global file_path
+	IniRead _label, %file_path%text.ini, Responses, %ButtonLabel%, %A_SPACE%
 	return _label
 }
 
 /*
-Popup window with information about the tool
-*/
+ * Popup window with information about the tool
+ */
 AboutPage() {
 	Gui, Help: New
 	Gui, Help:Add, Text,, Developed by: Cody Bromwich
@@ -74,15 +82,15 @@ AboutPage() {
 }
 
 /*
-Opens the Readme in notepad
-*/
+ * Opens the Readme in notepad
+ */
 HelpPage() {
 	Run, notepad README.txt
 }
 
 /*
-Kana Magic courtesy of Christian Belland and Jeremy Lyon. I don't fully understand what this does, but it does work, so...
-*/
+ * Kana Magic courtesy of Christian Belland and Jeremy Lyon. I don't fully understand what this does, but it does work, so...
+ */
 SendToKana(txt) {
 		IfWinExist, KANA - Agent
 		{
@@ -94,6 +102,56 @@ SendToKana(txt) {
 			SendInput % txt
 		}
 }
+
+
+/*
+ * Checks for existence of responses file (text.ini) and returns its path if it exists, and False if not
+ */
+check_for_files() {
+	if FileExist("H:\MacroProgram\")
+		return "H:\MacroProgram\"
+	else if FileExist("C:\Users\" . A_UserName . "\Documents\MacroProgram\")
+		return "C:\Users\" . A_UserName . "\Documents\MacroProgram\"
+	else if FileExist(A_WorkingDir . "\MacroProgram\")
+		return A_WorkingDir . "\MacroProgram\"
+	else if FileExist(A_WorkingDir . "\text.ini")
+		return A_WorkingDir . "\"
+	else
+		return False
+
+}
+
+
+/*
+ * This function is run if check_for_files returns False, and sets the file path for the creation of the text.ini file. It prefers the H: drive, uses the documents folder if the H: drive doesn't exist,
+ * and uses the current working directory as a last resort
+ */
+check_path() {
+	Global File_Path
+	IfExist, H:\
+		File_Path := "E:\MacroProgram\"
+	IfExist, C:\Users\%A_UserName%\Documents
+		File_Path := "C:\Users\" . A_UserName . "\Documents\MacroProgram\"
+	else
+		File_Path := A_WorkingDir . "\"
+}
+
+
+/*
+ * Creates the MacroProgram directory if necessary and copies the text.ini file from a master file
+ */
+get_settings() {
+	Global File_Path
+
+	check_path()
+
+	IfNotExist %File_Path%
+		FileCreateDir, %File_Path%
+
+	if !FileExist(File_Path . "text.ini")
+		FileCopy, % "S:\TB-West Central\Public\Macro Program\Chat Tool\text.ini", %File_Path%text.ini
+}
+
 Return ; So GuiClose doesn't screw everything up
 
 GuiClose:
